@@ -19,7 +19,7 @@ main() {
     local file_endings=$(get_tmux_option "@file_endings" "py")
     local env=$(get_tmux_option "@env", "venv")
     local run_command=$(get_tmux_option "@run_command" "C")
-    tmux bind-key $run_command run-shell "$CURRENT_DIR/scripts/line_counter.sh $(tmux display-message -p '#{pane_current_path}') $env $file_endings"
+    tmux bind-key C run-shell "$CURRENT_DIR/scripts/line_counter.sh $(tmux display-message -p '#{pane_current_path}') $env $file_endings"
 
 }
 main
