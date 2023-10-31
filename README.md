@@ -29,5 +29,5 @@ By adding the following lines to your tmux.conf file you can customize the name 
 ```bash
 set -g @run_command "C"
 set -g @env "venv"
-set -g @file_endings "py, sh, rs, js"
+set -g @file_endings "py,sh,rs,js"
 ```
