@@ -1,7 +1,23 @@
 #!/usr/bin/env bash
+#
+get_tmux_option() {
+  local option="$1"
+  local default="$2"
+  local value=$(tmux show-option -gqv "$option")
+
+  if [ -z "$value" ]
+  then
+    echo "$default"
+  else
+    echo "$value"
+  fi
+}
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-WORKING_DIR=$(pwd)
-FILE_ENDINGS="py"
-VENV="venv"
-tmux bind-key C run-shell "$CURRENT_DIR/scripts/line_counter.sh $(tmux display-message -p '#{pane_current_path}') $VENV $FILE_ENDINGS"
+
+main() {
+    local file_endings=$(get_tmux_option "@file_endings" "py")
+    local env=$(get_tmux_option "@env", "venv")
+    tmux bind-key C run-shell "$CURRENT_DIR/scripts/line_counter.sh $(tmux display-message -p '#{pane_current_path}') $env $file_endings"
+}
+main
