@@ -32,5 +32,5 @@ for extension in "$@"; do
 done
 
 # Print the total lines of code
-echo "Total lines of code (excluding empty lines and files in $venv_name directory): $total_lines"
+echo "Total lines of code $total_lines"
 
