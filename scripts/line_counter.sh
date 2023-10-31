@@ -1,36 +1,52 @@
 #!/bin/bash
 
-# Check for correct number of arguments
-if [ "$#" -lt 3 ]; then
-    echo "Usage: $0 <directory> <venv_name> <file_extensions...>"
+# Check if the required arguments are provided
+if [ $# -ne 3 ]; then
+    echo "Usage: $0 <file_endings> <current_directory> <directory_to_ignore>"
     exit 1
 fi
 
-# Set the directory to search in
-directory="$1"
+file_endings="$1"
+current_directory="$2"
+directory_to_ignore="$3"
+lines_of_code=0
 
-# Set the virtual environment name
-venv_name="$2"
+# Function to count lines of code in a file
+count_lines_of_code() {
+    local file="$1"
+    local lines=0
 
-# Remove the first two arguments (directory and venv_name) to get the file extensions
-shift 2
+    if [ -f "$file" ]; then
+        lines=$(wc -l < "$file")
+    fi
 
-# Initialize a variable to store the total lines of code
-total_lines=0
+    echo "$lines"
+}
 
-# Loop through the provided file extensions
-for extension in "$@"; do
-    # Use 'find' to locate files with the specified extension and count their lines
-    while IFS= read -r -d '' file; do
-        # Check if the file is outside the virtual environment directory
-        if [[ "$file" != "$directory/$venv_name"* ]]; then
-            # Count non-empty lines (ignoring lines that contain only whitespace)
-            lines=$(grep -v '^[[:space:]]*$' "$file" | wc -l)
-            total_lines=$((total_lines + lines))
+# Function to traverse the directory tree
+traverse_directory() {
+    local directory="$1"
+    local ignore_directory="$2"
+
+    for item in "$directory"/*; do
+        if [ "$item" == "$ignore_directory" ]; then
+            continue  # Skip the directory to ignore
+        elif [ -d "$item" ]; then
+            # If it's a directory, recursively call the function
+            traverse_directory "$item" "$ignore_directory"
+        elif [ -f "$item" ]; then
+            # If it's a file, check if it matches the specified file endings
+            if [[ "$item" == *.$file_endings ]]; then
+                # If it matches, count lines of code and add to the total
+                lines=$(count_lines_of_code "$item")
+                lines_of_code=$((lines_of_code + lines))
+            fi
         fi
-    done < <(find "$directory" -type f -name "*.$extension" -print0)
-done
+    done
+}
 
-# Print the total lines of code
-echo "Total lines of code $total_lines"
+# Start the directory traversal
+traverse_directory "$current_directory" "$directory_to_ignore"
 
+# Return the total lines of code
+echo "Total lines of code: $lines_of_code"
