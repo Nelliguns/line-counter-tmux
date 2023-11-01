@@ -13,10 +13,6 @@
 set -g @plugin 'Nelliguns/line-counter-tmux'
 ```
 2. Press prefix + <kbd>I</kbd> to install the plugin.
-3. in the same level as your tmux.conf file
-   ```bash
-   tmux source tmux.conf
-   ```
 
 ## Usage
 
