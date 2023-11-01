@@ -3,7 +3,7 @@
 ## Features
 
 * Count the total amount of code lines within a project
-* Specify languag to look for
+* Specify language to look for
 * Specify a directory to ignore
 
 ## Installation with Tmux Plugin Manager (TPM)
