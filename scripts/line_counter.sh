@@ -49,4 +49,5 @@ traverse_directory() {
 traverse_directory "$current_directory" "$directory_to_ignore"
 
 # Return the total lines of code
+echo "$current_directory"
 echo "Total lines of code: $lines_of_code"
