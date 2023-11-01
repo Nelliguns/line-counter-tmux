@@ -3,7 +3,7 @@
 ## Features
 
 * Count the total amount of code lines within a project
-* Specify languages to look for
+* Specify languag to look for
 * Specify a directory to ignore
 
 ## Installation with Tmux Plugin Manager (TPM)
@@ -27,7 +27,6 @@ Once installed, you can use the key binding \<prefix>C to retrieve the amounted 
 By adding the following lines to your tmux.conf file you can customize the name of the directory to ignore and the file endings of the languages you want to look for as well as the command to run the plugin. 
 
 ```bash
-set -g @run_command "C"
 set -g @env "venv"
-set -g @file_endings "py,sh,rs,js"
+set -g @file_endings "py"
 ```
