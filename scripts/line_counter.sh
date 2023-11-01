@@ -2,12 +2,12 @@
 
 # Check if the required arguments are provided
 if [ $# -ne 3 ]; then
-    echo "Usage: $0 <file_endings> <current_directory> <directory_to_ignore>"
+    echo "Usage: $0 <file_endings> <directory_to_ignore>"
     exit 1
 fi
 
 file_endings="$1"
-current_directory="$2"
+current_directory="$(tmux display-message -p '#{pane_current_path}')"
 directory_to_ignore="$3"
 lines_of_code=0
 
