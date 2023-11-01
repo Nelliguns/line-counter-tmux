@@ -48,7 +48,7 @@ traverse_directory() {
 }
 
 # Start the directory traversal
-traverse_directory "$current_directory" "$directory_to_ignore"
+traverse_directory "$current_directory" "$(readlink -f "$directory_to_ignore")"
 
 # Return the total lines of code
 echo "Total lines of code: $lines_of_code"
