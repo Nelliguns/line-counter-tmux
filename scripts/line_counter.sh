@@ -13,30 +13,39 @@ current_directory="$(tmux display-message -p '#{pane_current_path}')"
 directory_to_ignore="$2"
 lines_of_code=0
 
-# Function to traverse the directory tree
-traverse_directory() {
-    local directory="$1"
-    local ignore_directory="$2"
+#!/bin/bash
 
-    for item in "$directory"/*; do
-        if [ "$item" -ef "$ignore_directory" ]; then
-            continue  # Skip the directory to ignore
-        elif [ -d "$item" ]; then
-            # If it's a directory, recursively call the function
-            traverse_directory "$item" "$ignore_directory"
-        elif [ -f "$item" ]; then
-            # If it's a file, check if it matches the specified file endings
-            if [[ "$item" == *.$file_endings ]]; then
-                # If it matches, count lines of code and add to the total
-                lines=$(wc -l < "$item")
-                lines_of_code=$((lines_of_code + lines))
-            fi
+# Check for correct number of arguments
+if [ "$#" -lt 3 ]; then
+    echo "Usage: $0 <file_extensions...> <venv_name>"
+    exit 1
+fi
+
+# Set the directory to search in
+directory="$(tmux display-message -p '#{pane_current_path}')"
+
+# Set the virtual environment name
+venv_name="$2"
+
+# Remove the first two arguments (directory and venv_name) to get the file extensions
+shift 2
+
+# Initialize a variable to store the total lines of code
+total_lines=0
+
+# Loop through the provided file extensions
+for extension in "$1"; do
+    # Use 'find' to locate files with the specified extension and count their lines
+    while IFS= read -r -d '' file; do
+        # Check if the file is outside the virtual environment directory
+        if [[ "$file" != "$directory/$venv_name"* ]]; then
+            # Count non-empty lines (ignoring lines that contain only whitespace)
+            lines=$(grep -v '^[[:space:]]*$' "$file" | wc -l)
+            total_lines=$((total_lines + lines))
         fi
-    done
-}
+    done < <(find "$directory" -type f -name "*.$extension" -print0)
+done
 
-# Start the directory traversal
-traverse_directory "$current_directory" "$(readlink -f "$directory_to_ignore")"
+# Print the total lines of code
+echo "Total lines of code (excluding empty lines and files in $venv_name directory): $total_lines"
 
-# Return the total lines of code
-echo "Total lines of code: $lines_of_code"
