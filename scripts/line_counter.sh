@@ -13,25 +13,13 @@ current_directory="$(tmux display-message -p '#{pane_current_path}')"
 directory_to_ignore="$2"
 lines_of_code=0
 
-# Function to count lines of code in a file
-count_lines_of_code() {
-    local file="$1"
-    local lines=0
-
-    if [ -f "$file" ]; then
-        lines=$(wc -l < "$file")
-    fi
-
-    echo "$lines"
-}
-
 # Function to traverse the directory tree
 traverse_directory() {
     local directory="$1"
     local ignore_directory="$2"
 
     for item in "$directory"/*; do
-        if [ "$item" == "$ignore_directory" ]; then
+        if [ "$item" -ef "$ignore_directory" ]; then
             continue  # Skip the directory to ignore
         elif [ -d "$item" ]; then
             # If it's a directory, recursively call the function
@@ -40,7 +28,7 @@ traverse_directory() {
             # If it's a file, check if it matches the specified file endings
             if [[ "$item" == *.$file_endings ]]; then
                 # If it matches, count lines of code and add to the total
-                lines=$(count_lines_of_code "$item")
+                lines=$(wc -l < "$item")
                 lines_of_code=$((lines_of_code + lines))
             fi
         fi
@@ -52,4 +40,3 @@ traverse_directory "$current_directory" "$(readlink -f "$directory_to_ignore")"
 
 # Return the total lines of code
 echo "Total lines of code: $lines_of_code"
-
