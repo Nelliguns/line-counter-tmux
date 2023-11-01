@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Check if the required arguments are provided
-if [ $# -ne 3 ]; then
+if [ $# -ne 2 ]; then
     echo "Usage: $0 <file_endings> <directory_to_ignore>"
     exit 1
 fi
 
 file_endings="$1"
 current_directory="$(tmux display-message -p '#{pane_current_path}')"
-directory_to_ignore="$3"
+directory_to_ignore="$2"
 lines_of_code=0
 
 # Function to count lines of code in a file
