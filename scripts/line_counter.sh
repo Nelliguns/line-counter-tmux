@@ -18,9 +18,9 @@ directory="$(tmux display-message -p '#{pane_current_path}')"
 # Initialize an associative array to store lines per extension
 declare -A lines_per_extension
 
-# Loop through the provided file extensions
+# Loop through the provided file extensions and initialize lines counts to 0
 for extension in "${file_extensions[@]}"; do
-    lines_per_extension["$extension"]=0  # Initialize lines count to 0 for this extension
+    lines_per_extension["$extension"]=0
 done
 
 # Use 'find' to locate files and count their lines for each extension
