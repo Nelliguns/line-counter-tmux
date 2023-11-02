@@ -24,18 +24,16 @@ for extension in "${file_extensions[@]}"; do
 done
 
 # Use 'find' to locate files and count their lines for each extension
-while IFS= read -r -d '' file; do
-    # Check if the file is outside the virtual environment directory
-    if [[ "$file" != "$directory/$venv_name"* ]]; then
-        for extension in "${file_extensions[@]}"; do
-            if [[ "$file" == *".$extension" ]]; then
-                # Count non-empty lines (ignoring lines that contain only whitespace)
-                lines=$(grep -v '^[[:space:]]*$' "$file" | wc -l)
-                lines_per_extension["$extension"]=$((lines_per_extension["$extension"] + lines))
-            fi
-        done
-    fi
-done < <(find "$directory" -type f -print0)
+for extension in "${file_extensions[@]}"; do
+    while IFS= read -r -d '' file; do
+        # Check if the file is outside the virtual environment directory
+        if [[ "$file" != "$directory/$venv_name"* ]] && [[ "$file" == *".$extension" ]]; then
+            # Count non-empty lines (ignoring lines that contain only whitespace)
+            lines=$(grep -v '^[[:space:]]*$' "$file" | wc -l)
+            lines_per_extension["$extension"]=$((lines_per_extension["$extension"] + lines))
+        fi
+    done < <(find "$directory" -type f -name "*.$extension" -print0)
+done
 
 # Print the lines of code for each extension
 for extension in "${file_extensions[@]}"; do
