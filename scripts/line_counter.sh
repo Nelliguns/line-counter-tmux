@@ -15,28 +15,28 @@ IFS=',' read -ra file_extensions <<< "$2"
 # Set the directory to the current path of the tmux pane
 directory="$(tmux display-message -p '#{pane_current_path}')"
 
-# Initialize an associative array to store lines per extension
-declare -A lines_per_extension
+# Set the virtual environment name
+venv_name="$1"
 
-# Loop through the provided file extensions and initialize lines counts to 0
-for extension in "${file_extensions[@]}"; do
-    lines_per_extension["$extension"]=0
-done
+# Split the provided file_extensions argument into an array
+IFS=',' read -ra file_extensions <<< "$2"
 
-# Use 'find' to locate files and count their lines for each extension
+# Initialize a variable to store the total lines of code
+total_lines=0
+
+# Loop through the provided file extensions
 for extension in "${file_extensions[@]}"; do
+    # Use 'find' to locate files with the specified extension and count their lines
     while IFS= read -r -d '' file; do
         # Check if the file is outside the virtual environment directory
-        if [[ "$file" != "$directory/$venv_name"* ]] && [[ "$file" == *".$extension" ]]; then
+        if [[ "$file" != "$directory/$venv_name"* ]]; then
             # Count non-empty lines (ignoring lines that contain only whitespace)
             lines=$(grep -v '^[[:space:]]*$' "$file" | wc -l)
-            lines_per_extension["$extension"]=$((lines_per_extension["$extension"] + lines))
+            total_lines=$((total_lines + lines))
         fi
     done < <(find "$directory" -type f -name "*.$extension" -print0)
 done
 
-# Print the lines of code for each extension
-for extension in "${file_extensions[@]}"; do
-    echo "Total lines of code for .$extension files (excluding empty lines and files in $venv_name directory): ${lines_per_extension["$extension"]}"
-done
+# Print the total lines of code
+echo "Total lines of code (excluding empty lines and files in $venv_name directory): $total_lines"
 
