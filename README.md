@@ -23,6 +23,7 @@ Once installed, you can use the key binding \<prefix>C to retrieve the amounted 
 By adding the following lines to your tmux.conf file you can customize the name of the directory to ignore and the file endings of the languages you want to look for as well as the command to run the plugin. 
 
 ```bash
-set -g @env "venv"
-set -g @file_endings "py,js"
+set -g @env "venv" # The directory to ignore
+set -g @file_endings "py,js" # file types separated with ","
+set -g @run_command "C" # command to run script
 ```
