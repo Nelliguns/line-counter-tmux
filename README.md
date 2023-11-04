@@ -22,7 +22,7 @@ set -g @plugin 'Nelliguns/line-counter-tmux'
 ## Usage
 
 Once installed, you can use the key binding \<prefix>F to retrieve the amounted lines of code for the current working directory.
-By default the plugin will look for py files and will ignore a directory named venv.
+By default, the plugin will look for py files and will ignore a directory named venv.
 
 You may want to count the lines of multiple languages and also change the name of the directory to ignore.
 
@@ -34,4 +34,11 @@ By adding the following lines to your tmux.conf file you can customize the name 
 set -g @env "venv" # The directory to ignore
 set -g @file_endings "py,js" # file types separated with ","
 set -g @run_command "C" # command to run script
+```
+
+## Tests
+
+Tests written in [bashunit](https://bashunit.typeddevs.com/). You can run all tests with:
+```bash
+lib/bashunit tests
 ```
