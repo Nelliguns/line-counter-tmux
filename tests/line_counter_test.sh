@@ -13,7 +13,13 @@ function test_no_arguments() {
 }
 
 function test_one_argument() {
-  assert_equals "Usage: $SCRIPT <venv_name> <file_extensions>" "$($SCRIPT fixtures)"
+  assert_equals "Usage: $SCRIPT <venv_name> <file_extensions>" "$($SCRIPT 'env-1')"
+}
+
+function test_unknown_directory() {
+  assert_equals\
+   "Total lines of code (excluding empty lines and files in env-unknown directory): 0"\
+   "$($SCRIPT 'env-unknown' txt)"
 }
 
 function test_one_file_extension() {
