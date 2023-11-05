@@ -8,4 +8,6 @@ function test_no_arguments() {
   assert_equals "Usage: $SCRIPT <venv_name> <file_extensions>" "$($SCRIPT)"
 }
 
-# TODO: more tests
+function test_one_argument() {
+  assert_equals "Usage: $SCRIPT <venv_name> <file_extensions>" "$($SCRIPT venv_name)"
+}
