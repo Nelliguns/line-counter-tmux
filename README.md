@@ -38,7 +38,14 @@ set -g @run_command "C" # command to run script
 
 ## Tests
 
-Tests written in [bashunit](https://bashunit.typeddevs.com/). You can run all tests with:
+Tests written in [bashunit](https://bashunit.typeddevs.com/).
+
+Install bashunit dependency:
+```bash
+./install-dependencies.sh
+```
+
+Run all tests:
 ```bash
 lib/bashunit tests
 ```
